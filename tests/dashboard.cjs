@@ -1,0 +1,90 @@
+const assert = require('node:assert/strict');
+const path = require('node:path');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || path.join(require('node:os').homedir(),'.cache','codex-runtimes','codex-primary-runtime','dependencies','node','node_modules','playwright'));
+(async () => {
+  const browser = await chromium.launch({channel:'msedge',headless:true});
+  try {
+    const page = await browser.newPage();
+    const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+    for (const width of [1920,1366,390]) {
+      await page.setViewportSize({width,height:950});
+      await page.goto('http://127.0.0.1:5173');
+      assert.equal(await page.locator('.dashboard-filters').getAttribute('open'),null);
+      assert.equal(await page.locator('.filter-panel').isVisible(),false);
+      await page.locator('.thailand-map path').first().waitFor();
+      assert.equal(await page.locator('.thailand-map path').count(),77);
+      assert.equal(await page.locator('.chart-donut').count(),2);
+      assert.equal(await page.locator('.chart-line').count(),1);
+      const monthValues=await page.locator('.month-values b').allTextContents();
+      assert.ok(new Set(monthValues).size>1);
+      const shares=await page.locator('.chart-donut').first().locator('.chart-legend b').allTextContents();
+      assert.ok(new Set(shares).size>1);
+      const breakdown = async title => {
+        const chart=page.locator('.chart').filter({has:page.getByRole('heading',{name:title,exact:true})});
+        return (await chart.locator('.bar-row b').allTextContents()).map(Number);
+      };
+      assert.deepEqual(await breakdown('ความบกพร่องทางร่างกาย'),[15,2,1]);
+      assert.deepEqual(await breakdown('สถานะการศึกษา'),[12,3,2,1]);
+      for (const title of ['ระดับการศึกษา','สถานภาพของพ่อแม่','เด็กอาศัยอยู่กับใคร','บทบาทผู้ปกครอง / ผู้ดูแล']) {
+        assert.ok(new Set(await breakdown(title)).size>1,`${title} must have a natural distribution`);
+      }
+      assert.deepEqual((await page.locator('.chart-donut').nth(1).locator('.chart-legend b').allTextContents()).map(v=>Number(v.split(' · ')[0])),[6,2,1]);
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth > innerWidth),false);
+      await page.screenshot({path:`dashboard-charts-${width}.png`,fullPage:true});
+    }
+    await page.setViewportSize({width:1366,height:950});
+    await page.goto('http://127.0.0.1:5173');
+    const toggle = page.locator('.dashboard-filters > summary');
+    await toggle.focus();
+    await toggle.press('Enter');
+    assert.equal(await page.locator('.filter-panel').isVisible(),true);
+    await toggle.press('Space');
+    assert.equal(await page.locator('.filter-panel').isVisible(),false);
+    const province = page.locator('.thailand-map path[aria-label^="นนทบุรี:"]');
+    await province.focus();
+    assert.match(await page.locator('.province-map [role=status]').innerText(),/นนทบุรี/);
+    await province.press('Enter');
+    await page.locator('.province-map').waitFor({state:'detached'});
+    assert.equal(await page.locator('.filter-grid').first().locator('[data-field=province] select').inputValue(),'นนทบุรี');
+    await page.goto('http://127.0.0.1:5173');
+    const filters = page.locator('.filter-grid').first();
+    await page.locator('.dashboard-filters > summary').click();
+    await filters.locator('[data-field=year] select').selectOption('2569');
+    await filters.locator('[data-field=province] select').selectOption('เชียงใหม่');
+    await page.getByRole('button',{name:'ค้นหา',exact:true}).click();
+    await page.locator('.dashboard-filters > summary').click();
+    assert.equal(await page.locator('.filter-panel').isVisible(),false);
+    assert.match(await page.locator('.dashboard-filters > summary').innerText(),/ใช้ 2 เงื่อนไข/);
+    const mapValue = Number((await page.locator('.thailand-map path[aria-label^="เชียงใหม่:"]').getAttribute('aria-label')).match(/: ([\d,]+)/)[1].replaceAll(',',''));
+    const stats = await page.locator('.stat strong').allTextContents();
+    const workloads = [0,1,3].reduce((sum,i)=>sum+Number(stats[i].match(/[\d,]+/)[0].replaceAll(',','')),0);
+    assert.equal(mapValue,workloads);
+    assert.equal(await page.locator('.thailand-map path[aria-label^="กรุงเทพมหานคร:"]').getAttribute('fill'),'#e5e9ed');
+    await page.locator('.thailand-map path[aria-label^="เชียงใหม่:"]').click();
+    assert.equal(await page.locator('.filter-grid').first().locator('[data-field=year] select').inputValue(),'2569');
+    assert.equal(await page.locator('.filter-grid').first().locator('[data-field=province] select').inputValue(),'เชียงใหม่');
+    await page.goto('http://127.0.0.1:5173');
+    await page.locator('.chart-line circle').first().click();
+    await page.locator('.chart-line').waitFor({state:'detached'});
+    await page.goto('http://127.0.0.1:5173');
+    await page.locator('.chart-donut circle').first().focus();
+    await page.locator('.chart-donut circle').first().press('Space');
+    await page.locator('.chart-donut').first().waitFor({state:'detached'});
+    await page.goto('http://127.0.0.1:5173');
+    await page.locator('.dashboard-filters > summary').click();
+    await page.locator('[data-field=office] select').first().selectOption({index:2});
+    await page.locator('[data-field=status] select').first().selectOption('อยู่ระหว่างดำเนินการ');
+    await page.getByRole('button',{name:'ค้นหา',exact:true}).click();
+    const statusChart = page.locator('.chart-donut').first();
+      assert.equal(await statusChart.locator('circle').count(),1);
+      assert.match(await statusChart.locator('.chart-legend').innerText(),/100\.0%/);
+    await page.locator('[data-field=from] input').first().fill('2099-01-01');
+    await page.locator('[data-field=to] input').first().fill('2099-12-31');
+    await page.getByRole('button',{name:'ค้นหา',exact:true}).click();
+    assert.equal(await page.locator('.chart-donut circle').count(),0);
+    assert.equal(await page.locator('.thailand-map path[fill="#e5e9ed"]').count(),77);
+    assert.equal((await page.locator('main').innerText()).includes('NaN'),false);
+    assert.deepEqual(errors,[]);
+    console.log('Dashboard: 3 viewport layouts, 77 boundaries, keyboard map/donut and monthly drill-down passed.');
+  } finally { await browser.close(); }
+})().catch(e=>{console.error(e);process.exit(1);});

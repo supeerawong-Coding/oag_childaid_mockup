@@ -1,0 +1,111 @@
+[
+  {
+    "file": "01-dashboard",
+    "title": "Dashboard ผู้บริหาร",
+    "slides": [
+      "01-dashboard-01.png",
+      "01-dashboard-02.png",
+      "01-dashboard-03.png",
+      "01-dashboard-04.png"
+    ]
+  },
+  {
+    "file": "02-consultation-list",
+    "title": "การให้คำปรึกษาด้านกฎหมายแก่เด็ก — หน้ารายการ",
+    "slides": [
+      "02-consultation-list-01.png",
+      "02-consultation-list-02.png"
+    ]
+  },
+  {
+    "file": "02-consultation-new",
+    "title": "การให้คำปรึกษาด้านกฎหมายแก่เด็ก — หน้าเพิ่มข้อมูล",
+    "slides": [
+      "02-consultation-new-01.png",
+      "02-consultation-new-02.png",
+      "02-consultation-new-03.png",
+      "02-consultation-new-04.png",
+      "02-consultation-new-05.png"
+    ]
+  },
+  {
+    "file": "02-consultation-example",
+    "title": "การให้คำปรึกษาด้านกฎหมายแก่เด็ก — ตัวอย่างข้อมูลที่กรอกแล้ว",
+    "slides": [
+      "02-consultation-example-01.png",
+      "02-consultation-example-02.png",
+      "02-consultation-example-03.png",
+      "02-consultation-example-04.png",
+      "02-consultation-example-05.png",
+      "02-consultation-example-06.png",
+      "02-consultation-example-07.png"
+    ]
+  },
+  {
+    "file": "03-prosecution-list",
+    "title": "การดำเนินงานชั้นพนักงานอัยการ — หน้ารายการ",
+    "slides": [
+      "03-prosecution-list-01.png",
+      "03-prosecution-list-02.png"
+    ]
+  },
+  {
+    "file": "03-prosecution-new",
+    "title": "การดำเนินงานชั้นพนักงานอัยการ — หน้าเพิ่มข้อมูล",
+    "slides": [
+      "03-prosecution-new-01.png",
+      "03-prosecution-new-02.png",
+      "03-prosecution-new-03.png",
+      "03-prosecution-new-04.png"
+    ]
+  },
+  {
+    "file": "03-prosecution-example",
+    "title": "การดำเนินงานชั้นพนักงานอัยการ — ตัวอย่างข้อมูลที่กรอกแล้ว",
+    "slides": [
+      "03-prosecution-example-01.png",
+      "03-prosecution-example-02.png",
+      "03-prosecution-example-03.png",
+      "03-prosecution-example-04.png",
+      "03-prosecution-example-05.png"
+    ]
+  },
+  {
+    "file": "04-activities-list",
+    "title": "กิจกรรม — หน้ารายการ",
+    "slides": [
+      "04-activities-list-01.png",
+      "04-activities-list-02.png"
+    ]
+  },
+  {
+    "file": "04-activities-new",
+    "title": "กิจกรรม — หน้าเพิ่มข้อมูล",
+    "slides": [
+      "04-activities-new-01.png",
+      "04-activities-new-02.png",
+      "04-activities-new-03.png",
+      "04-activities-new-04.png"
+    ]
+  },
+  {
+    "file": "04-activities-example",
+    "title": "กิจกรรม — ตัวอย่างข้อมูลที่กรอกแล้ว",
+    "slides": [
+      "04-activities-example-01.png",
+      "04-activities-example-02.png",
+      "04-activities-example-03.png",
+      "04-activities-example-04.png"
+    ]
+  },
+  {
+    "file": "05-reports",
+    "title": "รายงาน — สรุปภาพรวม",
+    "slides": [
+      "05-reports-01.png",
+      "05-reports-02.png",
+      "05-reports-03.png",
+      "05-reports-04.png"
+    ]
+  }
+]
