@@ -13,6 +13,18 @@ npm run dev
 
 เปิด http://127.0.0.1:5173
 
+## เผยแพร่บน GitHub Pages
+
+ในรีโป GitHub ไปที่ **Settings → Pages → Build and deployment** แล้วเลือก
+**Source: GitHub Actions** จากนั้น push ขึ้น `main` หรือกด **Run workflow**
+ในแท็บ **Actions → Deploy to GitHub Pages**
+
+Workflow จะรัน `npm run build` และเผยแพร่เฉพาะไฟล์ใน `dist/`
+จึงไม่ต้อง commit ไฟล์ `dist/` ที่ build ใหม่ทุกครั้ง เมื่อ deploy สำเร็จ
+ลิงก์เว็บจะแสดงใน **Settings → Pages**
+
+## ภาพรวมระบบ
+
 Dashboard ใช้กราฟเส้นรายเดือน กราฟโดนัทสำหรับสถานะและบทบาทเด็ก
 กราฟแท่งสำหรับเปรียบเทียบ และแผนที่ประเทศไทยรายจังหวัดแบบ SVG
 กราฟทั้งหมดใช้ตัวกรองร่วมกันและคลิกดูรายการได้ แผนที่ใช้ไฟล์ขอบเขต
